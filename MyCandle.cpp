@@ -60,10 +60,10 @@ void MyCandle::setVariance()
   rval = random8(0, m_varChangeLikely);
   switch (rval) {
   case 1:
-    m_varianceDirection = CANDLE_UP;
+    m_varianceDirection = CANDLE_DOWN;
     break;
   case 2:
-    m_varianceDirection = CANDLE_DOWN;
+    m_varianceDirection = CANDLE_UP;
     break;
   default:
     m_varianceDirection = CANDLE_LEVEL;
@@ -76,12 +76,12 @@ void MyCandle::setHue()
   uint8_t rval = 0;
 
   if (m_candles[0].h >= m_hueTargetHigh) {
-    m_hueDirection = -1;
+    m_hueDirection = HUE_DOWN;
     return;
   }
 
   if (m_candles[0].h <= m_hueTargetLow) {
-    m_hueDirection = 1;
+    m_hueDirection = HUE_UP;
     return;
   }
 
