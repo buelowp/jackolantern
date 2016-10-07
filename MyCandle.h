@@ -8,8 +8,11 @@
 
 #define NUM_LEDS        1
 #define CANDLE_DOWN    -1
-#define CANDLE_LEVEL  0
+#define CANDLE_LEVEL    0
 #define CANDLE_UP       1
+#define HUE_DOWN        -1
+#define HUE_LEVEL       0
+#define HUE_UP          1
 
 class MyCandle {
 public:

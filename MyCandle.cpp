@@ -88,13 +88,13 @@ void MyCandle::setHue()
   rval = random8(0, m_hueChangeLikely);
   switch (rval) {
   case 1:
-    m_hueDirection = -1;
+    m_hueDirection = HUE_DOWN;
     break;
   case 2:
-    m_hueDirection = 1;
+    m_hueDirection = HUE_UP;
     break;
   default:
-    m_hueDirection = 0;
+    m_hueDirection = HUE_LEVEL;
     break;
   }
 }
