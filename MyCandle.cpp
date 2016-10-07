@@ -47,7 +47,7 @@ void MyCandle::setVariance()
 {
   uint8_t rval = 0;
 
-  if (m_candles[0].v <= 60) {
+  if (m_candles[0].v <= 80) {
     m_varianceDirection = CANDLE_UP;
     return;
   }
@@ -65,9 +65,9 @@ void MyCandle::setVariance()
   case 2:
     m_varianceDirection = CANDLE_UP;
     break;
-  default:
+/*  default:
     m_varianceDirection = CANDLE_LEVEL;
-    break;    
+    break;*/
   }
 }
 

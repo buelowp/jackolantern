@@ -27,8 +27,8 @@ public:
 
 private:
   CHSV m_candles[NUM_LEDS];
-  uint8_t m_varianceDirection;
-  uint8_t m_hueDirection;
+  int m_varianceDirection;
+  int m_hueDirection;
   uint8_t m_hueChangeLikely;
   uint8_t m_varChangeLikely;
   uint8_t m_hueTargetLow;
