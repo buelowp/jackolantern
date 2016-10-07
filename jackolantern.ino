@@ -7,7 +7,7 @@ MyCandle candle;
 void setup() {
   delay(2000);
   FastLED.addLeds<NEOPIXEL, 1>(leds, NUM_LEDS);
-  candle.init(HUE_PURPLE, HUE_PURPLE - 20, HUE_PURPLE + 20, 25, 10);
+  candle.init(HUE_RED, HUE_RED, HUE_RED + 20, 25, 5);
   FastLED.clear();
   FastLED.show();
 }

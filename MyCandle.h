@@ -6,7 +6,7 @@
  *      Author: pete
  */
 
-#define NUM_LEDS        7
+#define NUM_LEDS        1
 #define CANDLE_DOWN    -1
 #define CANDLE_FLICKER  0
 #define CANDLE_UP       1
@@ -18,21 +18,18 @@ public:
 
   bool init(HSVHue, uint8_t, uint8_t, uint8_t, uint8_t);
   void runCandle();
-  void switchDirection();
-  void setHueDirection();
+  void setVariance();
+  void setHue();
   void oscillate();
   void seeTheRainbow();
 
 private:
   CHSV candles[NUM_LEDS];
-  uint8_t mDir;
-  bool mIsFlickering;
-  uint8_t mBaseV;
-  uint8_t mLikely;
-  uint8_t mHueTargetHigh;
-  uint8_t mHueTargetLow;
-  uint8_t mHueChange;
-  uint8_t mHueUpdate;
-  uint8_t m_toUpdateHue;
+  uint8_t m_varianceDirection;
+  uint8_t m_hueDirection;
+  uint8_t m_hueChangeLikely;
+  uint8_t m_varChangeLikely;
+  uint8_t m_hueTargetLow;
+  uint8_t m_hueTargetHigh;
 };
 

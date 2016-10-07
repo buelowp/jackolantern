@@ -10,15 +10,12 @@ extern CRGB leds[NUM_LEDS];
 
 MyCandle::MyCandle()
 {
-  mIsFlickering = false;
-  mBaseV = 0;
-  mDir = CANDLE_UP;
-  mLikely = 100;
-  mHueTargetHigh = 0;
-  mHueTargetLow = 0;
-  mHueChange = 0;
-  mHueUpdate = 0;
-  m_toUpdateHue = 0;
+  m_varianceDirection = CANDLE_UP;
+  m_varChangeLikely = 0;
+  m_hueChangeLikely = 0;
+  m_hueTargetHigh = 0;
+  m_hueTargetLow = 0;
+  m_hueDirection = 0;
 }
 
 MyCandle::~MyCandle()
@@ -31,101 +28,94 @@ void MyCandle::seeTheRainbow()
   FastLED.show();
 }
 
-bool MyCandle::init(HSVHue c, uint8_t tl, uint8_t th, uint8_t l, uint8_t h)
+bool MyCandle::init(HSVHue c, uint8_t tl, uint8_t th, uint8_t vcl, uint8_t hcl)
 {
     for(uint8_t i = 0; i < NUM_LEDS; i++) {
         candles[i].h = c;
         candles[i].v = 100;
         candles[i].s = 255;
     }
-    if (l < 4)
-      l = 4;
-    mLikely = l;
+    if (vcl < 4)
+      vcl = 4;
+    m_varChangeLikely = vcl;
 
-    if (h < 1)
-      h = 1;
-    mHueChange = h;
+    if (hcl < 4)
+      hcl = 4;
+    m_hueChangeLikely = hcl;
 
-    mHueTargetHigh = th;
-    mHueTargetLow = tl;
+    m_hueTargetHigh = th;
+    m_hueTargetLow = tl;
 
     return true;
 }
 
-void MyCandle::switchDirection()
+void MyCandle::setVariance()
 {
   uint8_t rval = 0;
 
-  if (candles[0].v <= 30) {
-    mDir = CANDLE_UP;
+  if (candles[0].v <= 60) {
+    m_varianceDirection = CANDLE_UP;
     return;
   }
 
-  if (candles[0].v >= 200) {
-    mDir = CANDLE_DOWN;
+  if (candles[0].v >= 250) {
+    m_varianceDirection = CANDLE_DOWN;
     return;
   }
 
-  rval = random8(0, mLikely);
+  rval = random8(0, m_varChangeLikely);
   if (rval == 1) {
-    mDir = CANDLE_UP;
+    m_varianceDirection = CANDLE_UP;
   }
   if (rval == 2) {
-    mDir = CANDLE_FLICKER;
+    m_varianceDirection = CANDLE_FLICKER;
   }
   if (rval == 3) {
-    mDir = CANDLE_UP;
+    m_varianceDirection = CANDLE_DOWN;
   }
 }
 
-void MyCandle::setHueDirection()
+void MyCandle::setHue()
 {
   uint8_t rval = 0;
 
-  if (candles[0].h >= mHueTargetHigh) {
-    mHueUpdate = -1;
+  if (candles[0].h >= m_hueTargetHigh) {
+    m_hueDirection = -1;
     return;
   }
 
-  if (candles[0].h <= mHueTargetLow) {
-    mHueUpdate = 1;
+  if (candles[0].h <= m_hueTargetLow) {
+    m_hueDirection = 1;
     return;
   }
 
-  rval = random8(0, mLikely);
+  rval = random8(0, m_hueChangeLikely);
   switch (rval) {
-  case 0:
-    mHueUpdate = 0;
-    break;
   case 1:
-    mHueUpdate = -1;
+    m_hueDirection = -1;
     break;
   case 2:
-    mHueUpdate = 1;
+    m_hueDirection = 1;
     break;
+  default:
+    m_hueDirection = 0;
   }
 }
 
 void MyCandle::oscillate()
 {
   for (uint8_t i = 0; i < NUM_LEDS; i++) {
-    candles[i].h += mHueUpdate;
-    candles[i].v += mDir;
+    candles[i].h += m_hueDirection;
+    candles[i].v += m_varianceDirection;
   }
-  delay(5);
+  delay(2);
   seeTheRainbow();
 }
 
 void MyCandle::runCandle()
 {
-  switchDirection();
-  if (m_toUpdateHue++ == 4) {
-    setHueDirection();
-    m_toUpdateHue = 0;
-  }
-  else {
-    mHueUpdate = 0;
-  }
+  setVariance();
+  setHue();
   oscillate();
 }
 
