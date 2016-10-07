@@ -22,18 +22,12 @@ MyCandle::~MyCandle()
 {
 }
 
-void MyCandle::seeTheRainbow()
-{
-  hsv2rgb_rainbow(candles, leds, NUM_LEDS);
-  FastLED.show();
-}
-
 bool MyCandle::init(HSVHue c, uint8_t tl, uint8_t th, uint8_t vcl, uint8_t hcl)
 {
     for(uint8_t i = 0; i < NUM_LEDS; i++) {
-        candles[i].h = c;
-        candles[i].v = 100;
-        candles[i].s = 255;
+        m_candles[i].h = c;
+        m_candles[i].v = 100;
+        m_candles[i].s = 255;
     }
     if (vcl < 4)
       vcl = 4;
@@ -53,25 +47,27 @@ void MyCandle::setVariance()
 {
   uint8_t rval = 0;
 
-  if (candles[0].v <= 60) {
+  if (m_candles[0].v <= 60) {
     m_varianceDirection = CANDLE_UP;
     return;
   }
 
-  if (candles[0].v >= 250) {
+  if (m_candles[0].v >= 250) {
     m_varianceDirection = CANDLE_DOWN;
     return;
   }
 
   rval = random8(0, m_varChangeLikely);
-  if (rval == 1) {
+  switch (rval) {
+  case 1:
     m_varianceDirection = CANDLE_UP;
-  }
-  if (rval == 2) {
-    m_varianceDirection = CANDLE_FLICKER;
-  }
-  if (rval == 3) {
+    break;
+  case 2:
     m_varianceDirection = CANDLE_DOWN;
+    break;
+  default:
+    m_varianceDirection = CANDLE_LEVEL;
+    break;    
   }
 }
 
@@ -79,12 +75,12 @@ void MyCandle::setHue()
 {
   uint8_t rval = 0;
 
-  if (candles[0].h >= m_hueTargetHigh) {
+  if (m_candles[0].h >= m_hueTargetHigh) {
     m_hueDirection = -1;
     return;
   }
 
-  if (candles[0].h <= m_hueTargetLow) {
+  if (m_candles[0].h <= m_hueTargetLow) {
     m_hueDirection = 1;
     return;
   }
@@ -99,17 +95,18 @@ void MyCandle::setHue()
     break;
   default:
     m_hueDirection = 0;
+    break;
   }
 }
 
 void MyCandle::oscillate()
 {
   for (uint8_t i = 0; i < NUM_LEDS; i++) {
-    candles[i].h += m_hueDirection;
-    candles[i].v += m_varianceDirection;
+    m_candles[i].h += m_hueDirection;
+    m_candles[i].v += m_varianceDirection;
   }
-  delay(2);
-  seeTheRainbow();
+  hsv2rgb_rainbow(m_candles, leds, NUM_LEDS);
+  FastLED.show();
 }
 
 void MyCandle::runCandle()

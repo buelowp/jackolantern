@@ -8,7 +8,7 @@
 
 #define NUM_LEDS        1
 #define CANDLE_DOWN    -1
-#define CANDLE_FLICKER  0
+#define CANDLE_LEVEL  0
 #define CANDLE_UP       1
 
 class MyCandle {
@@ -21,10 +21,9 @@ public:
   void setVariance();
   void setHue();
   void oscillate();
-  void seeTheRainbow();
 
 private:
-  CHSV candles[NUM_LEDS];
+  CHSV m_candles[NUM_LEDS];
   uint8_t m_varianceDirection;
   uint8_t m_hueDirection;
   uint8_t m_hueChangeLikely;
