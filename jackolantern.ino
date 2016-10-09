@@ -7,11 +7,19 @@ MyCandle candle;
 void setup() {
   delay(2000);
   FastLED.addLeds<WS2812B, 1>(leds, NUM_LEDS);
-  candle.init(HUE_RED, HUE_RED, HUE_RED + 20, 55, 5);
+  candle.init(HUE_RED, HUE_RED, HUE_RED + 15, 55, 50, 5);
   FastLED.clear();
   FastLED.show();
 }
 
 void loop() {
+  uint16_t rval = random16(0, 20000);
+
+  if (rval == 13)
+    candle.init(HUE_PURPLE, HUE_PURPLE - 10, HUE_PURPLE + 5, 55, 50, 5);
+  if (rval == 128)
+    candle.init(HUE_RED, HUE_RED, HUE_RED + 15, 55, 50, 5);
+
   candle.runCandle();
+  delay(5);
 }

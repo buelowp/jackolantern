@@ -16,13 +16,15 @@ MyCandle::MyCandle()
   m_hueTargetHigh = 0;
   m_hueTargetLow = 0;
   m_hueDirection = 0;
+  m_huePriority = 0;
+  m_huePrioCount = 0;
 }
 
 MyCandle::~MyCandle()
 {
 }
 
-bool MyCandle::init(HSVHue c, uint8_t tl, uint8_t th, uint8_t vcl, uint8_t hcl)
+bool MyCandle::init(HSVHue c, uint8_t tl, uint8_t th, uint8_t vcl, uint8_t hcl, uint8_t prio)
 {
     for(uint8_t i = 0; i < NUM_LEDS; i++) {
         m_candles[i].h = c;
@@ -39,6 +41,7 @@ bool MyCandle::init(HSVHue c, uint8_t tl, uint8_t th, uint8_t vcl, uint8_t hcl)
 
     m_hueTargetHigh = th;
     m_hueTargetLow = tl;
+    m_huePriority = prio;
 
     return true;
 }
@@ -65,9 +68,9 @@ void MyCandle::setVariance()
   case 2:
     m_varianceDirection = CANDLE_UP;
     break;
-/*  default:
+  case 3:
     m_varianceDirection = CANDLE_LEVEL;
-    break;*/
+    break;    
   }
 }
 
@@ -93,7 +96,7 @@ void MyCandle::setHue()
   case 2:
     m_hueDirection = HUE_UP;
     break;
-  default:
+  case 3:
     m_hueDirection = HUE_LEVEL;
     break;
   }
@@ -102,7 +105,9 @@ void MyCandle::setHue()
 void MyCandle::oscillate()
 {
   for (uint8_t i = 0; i < NUM_LEDS; i++) {
-    m_candles[i].h += m_hueDirection;
+    if ((m_huePrioCount++ % m_huePriority) == 0)
+      m_candles[i].h += m_hueDirection;
+      
     m_candles[i].v += m_varianceDirection;
   }
   hsv2rgb_rainbow(m_candles, leds, NUM_LEDS);
@@ -113,6 +118,7 @@ void MyCandle::runCandle()
 {
   setVariance();
   setHue();
+    
   oscillate();
 }
 
