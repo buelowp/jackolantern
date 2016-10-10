@@ -19,7 +19,7 @@ public:
   MyCandle();
   ~MyCandle();
 
-  bool init(HSVHue, uint8_t, uint8_t, uint8_t, uint8_t, uint8_t);
+  void init(HSVHue, uint8_t, uint8_t, uint8_t, uint8_t, uint8_t);
   void runCandle();
   void setVariance();
   void setHue();

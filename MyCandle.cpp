@@ -24,32 +24,34 @@ MyCandle::~MyCandle()
 {
 }
 
-bool MyCandle::init(HSVHue c, uint8_t tl, uint8_t th, uint8_t vcl, uint8_t hcl, uint8_t prio)
+void MyCandle::init(HSVHue c, uint8_t tl, uint8_t th, uint8_t vcl, uint8_t hcl, uint8_t prio)
 {
-    for(uint8_t i = 0; i < NUM_LEDS; i++) {
-        m_candles[i].h = c;
-        m_candles[i].v = 100;
-        m_candles[i].s = 255;
-    }
-    if (vcl < 4)
-      vcl = 4;
-    m_varChangeLikely = vcl;
+  m_varianceDirection = CANDLE_UP;
+  m_hueDirection = HUE_LEVEL;
+  m_huePrioCount = 0;
 
-    if (hcl < 4)
-      hcl = 4;
-    m_hueChangeLikely = hcl;
+  for(uint8_t i = 0; i < NUM_LEDS; i++) {
+    m_candles[i].h = c;
+    m_candles[i].v = 100;
+    m_candles[i].s = 255;
+  }
+  if (vcl < 4)
+    vcl = 4;
+  
+  m_varChangeLikely = vcl;
 
-    m_hueTargetHigh = th;
-    m_hueTargetLow = tl;
-    m_huePriority = prio;
+  if (hcl < 4)
+    hcl = 4;
+    
+  m_hueChangeLikely = hcl;
 
-    return true;
+  m_hueTargetHigh = th;
+  m_hueTargetLow = tl;
+  m_huePriority = prio;
 }
 
 void MyCandle::setVariance()
 {
-  uint8_t rval = 0;
-
   if (m_candles[0].v <= 80) {
     m_varianceDirection = CANDLE_UP;
     return;
@@ -60,8 +62,7 @@ void MyCandle::setVariance()
     return;
   }
 
-  rval = random8(0, m_varChangeLikely);
-  switch (rval) {
+  switch (random8(0, m_varChangeLikely)) {
   case 1:
     m_varianceDirection = CANDLE_DOWN;
     break;
@@ -76,8 +77,6 @@ void MyCandle::setVariance()
 
 void MyCandle::setHue()
 {
-  uint8_t rval = 0;
-
   if (m_candles[0].h >= m_hueTargetHigh) {
     m_hueDirection = HUE_DOWN;
     return;
@@ -88,8 +87,7 @@ void MyCandle::setHue()
     return;
   }
 
-  rval = random8(0, m_hueChangeLikely);
-  switch (rval) {
+  switch (random8(0, m_hueChangeLikely)) {
   case 1:
     m_hueDirection = HUE_DOWN;
     break;

@@ -7,9 +7,9 @@ MyCandle candle;
 void setup() {
   delay(2000);
   FastLED.addLeds<WS2812B, 1>(leds, NUM_LEDS);
-  candle.init(HUE_RED, HUE_RED, HUE_RED + 15, 55, 50, 5);
   FastLED.clear();
   FastLED.show();
+  candle.init(HUE_RED, HUE_RED, HUE_RED + 15, 55, 50, 5);
 }
 
 void loop() {
@@ -17,7 +17,7 @@ void loop() {
 
   if (rval == 13)
     candle.init(HUE_PURPLE, HUE_PURPLE - 10, HUE_PURPLE + 5, 55, 50, 5);
-  if (rval == 128)
+  if (rval == 57)
     candle.init(HUE_RED, HUE_RED, HUE_RED + 15, 55, 50, 5);
 
   candle.runCandle();
